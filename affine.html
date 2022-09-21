@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head><title>affine cipher</title>
+        <link rel="stylesheet" href="makecss.css">
+    <script>
+        function encrypt(){
+            var a=document.getElementById('io').value
+            var b=document.getElementById('io1').value
+            b=parseInt(b)
+            var c=document.getElementById('io2').value
+            c=parseInt(c)
+            var s=''
+            var len=parseInt(a.length)
+            var temp,t
+            for(var i=0;i<len;i++)
+            {
+                temp=a.charAt(i)
+                t=temp.charCodeAt(0)
+                t=parseInt(t-32)
+                t=(b*t+c)%95
+                t+=32
+                temp=String.fromCharCode(t)
+                s+=temp
+            }
+            document.getElementById('pt').innerHTML=String('Encrypted text is : '+s)
+            // document.getElementById('pt').innerHTML=String('Plane text is '+ptext+'<br>value of a : '+b+'<br>value of b : '+c+'<br><br>Encrypted text is : '+s)
+        }
+
+        function decrypt(){
+            var a=document.getElementById('e').value//encrypted text
+            var b=document.getElementById('e1').value
+            b=parseInt(b)//value of a integer
+            var c=document.getElementById('e2').value
+            c=parseInt(c)//value of b integer
+            var s=''
+            var k=modularity(b)
+            var len=parseInt(a.length)
+            var temp,t
+            for(var i=0;i<len;i++)
+            {
+                temp=a.charAt(i)
+                t=temp.charCodeAt(0)
+                t=parseInt(t-32)
+                t=(k*(t-c))%95
+                t=(t<0)?makemodwithnegative(t,95):t
+                t+=32
+                temp=String.fromCharCode(t)
+                s+=temp
+            }
+
+            document.getElementById('pt1').innerHTML=String('Decrypted text : '+s)
+        }
+
+        function makemodwithnegative(a,b){
+            return (a-(Math.floor(a/b))*b)
+        }
+
+        function modularity(a)
+        {
+            for(var i=1;i<96;i++)
+                if((a*i)%95==1)
+                    return i
+        }
+
+
+    </script>
+    </head>
+    <body>
+        <div class="split left" style="float:left;">
+            <form action="#">
+            <span>Enter the plane text</span>  <br><input id="io" type="text" placeholder="write here!!" required><br>
+            <span>Enter the a</span> <br><input id="io1" type="text" placeholder="write here!!" required><br>
+            <span>Enter the b</span> <br><input id="io2" type="text" placeholder="write here!!" required><br>
+            
+            <button onclick="encrypt()">click here for encryption</button>
+            </form>
+            <p id="pt"></p>
+        </div>
+        <div class="split right" style="float:right;">
+            <form action="#">
+                <span>Enter the plane text</span><br><input id="e" type="text" placeholder="write here!!" required><br>
+                <span>Enter the a</span><br><input id="e1" type="text" placeholder="write here!!" required><br>
+                <span>Enter the b</span><br><input id="e2" type="text" placeholder="write here!!" required><br>
+                
+                <button onclick="decrypt()">click here for decryption</button>
+            </form>
+            <p id="pt1"></p>
+        </div>
+    </body>
+</html>
